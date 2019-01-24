@@ -1,0 +1,54 @@
+{
+  "name": "crcms/microservice-server",
+  "description": "Microservice server.",
+  "keywords": [
+    "microservice",
+    "swoole",
+    "tcp",
+    "socket",
+    "server",
+    "crcms",
+    "laravel"
+  ],
+  "homepage": "http://blog.crcms.cn",
+  "support": {
+    "issues": "https://github.com/crcms/microservice-server/issues",
+    "source": "https://github.com/crcms/microservice-server"
+  },
+  "authors": [
+    {
+      "name": "simon",
+      "email": "simon@crcms.cn"
+    }
+  ],
+  "license": "MIT",
+  "type": "library",
+  "require": {
+    "php": "^7.2.4",
+    "crcms/microservice-bridging": "dev-master",
+    "crcms/swoole-server": "dev-master",
+    "illuminate/events": "5.7.*",
+    "illuminate/config": "5.7.*",
+    "illuminate/encryption": "5.7.*"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.2",
+    "phpunit/phpunit": "^7.4",
+    "symfony/var-dumper": "^4.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "CrCms\\Microservice\\Server\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CrCms\\Microservice\\Server\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
