@@ -11,7 +11,7 @@
 
 namespace CrCms\Microservice\Server\Http;
 
-use CrCms\Microservice\Server\Kernel;
+use CrCms\Microservice\Server\Contracts\KernelContract as Kernel;
 use Swoole\Http\Server as HttpServer;
 use CrCms\Server\Server\AbstractServer;
 use CrCms\Server\Server\Contracts\ServerContract;

@@ -3,7 +3,7 @@
 namespace CrCms\Microservice\Server\Http\Events;
 
 use Swoole\Http\Request;
-use CrCms\Microservice\Server\Kernel;
+use CrCms\Microservice\Server\Contracts\KernelContract as Kernel;
 use CrCms\Server\Server\AbstractServer;
 use CrCms\Server\Http\Request as ServerRequest;
 use CrCms\Server\Server\Contracts\EventContract;
