@@ -11,12 +11,13 @@
 
 namespace CrCms\Microservice\Server;
 
+use CrCms\Microservice\Bridging\DataPacker;
+use CrCms\Microservice\Bridging\Packer\JsonPacker;
 use Illuminate\Support\Collection;
 use CrCms\Microservice\Routing\Route;
 use Illuminate\Support\ServiceProvider;
 use CrCms\Microservice\Server\Http\Request;
 use CrCms\Microservice\Server\Http\Response;
-use CrCms\Microservice\Bridging\Packer;
 use CrCms\Microservice\Server\Events\RequestHandling;
 use CrCms\Microservice\Server\Contracts\ResponseContract;
 
@@ -35,11 +36,11 @@ class ServerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app['events']->listen(RequestHandling::class, function (RequestHandling $event) {
-            if ($event->request instanceof Request && $event->request->method() !== 'POST') {
-                return $this->allServices();
-            }
-        });
+//        $this->app['events']->listen(RequestHandling::class, function (RequestHandling $event) {
+//            if ($event->request instanceof Request && $event->request->method() !== 'POST') {
+//                return $this->allServices();
+//            }
+//        });
 
         //merge server config to swoole config
         $this->mergeServerConfigToSwoole();
@@ -52,7 +53,7 @@ class ServerServiceProvider extends ServiceProvider
     {
         $this->registerAlias();
 
-        $this->registerServices();
+        //$this->registerServices();
     }
 
     /**
@@ -60,7 +61,7 @@ class ServerServiceProvider extends ServiceProvider
      */
     protected function registerAlias(): void
     {
-        $this->app->alias('server.packer', Packer::class);
+        $this->app->alias('server.packer', DataPacker::class);
     }
 
     /**
@@ -69,7 +70,8 @@ class ServerServiceProvider extends ServiceProvider
     protected function registerServices(): void
     {
         $this->app->singleton('server.packer', function ($app) {
-            return new Packer($app['encrypter'], $app['config']->get('app.encryption'));
+            $encryption = $app['config']->get('app.encryption');
+            return new DataPacker(new JsonPacker, $encryption === true ? $app['encrypter'] : null);
         });
     }
 
@@ -105,7 +107,6 @@ class ServerServiceProvider extends ServiceProvider
     {
         return [
             'server.packer',
-            'server.secret',
         ];
     }
 }

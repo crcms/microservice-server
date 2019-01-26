@@ -2,6 +2,7 @@
 
 namespace CrCms\Microservice\Server\Contracts;
 
+use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 
 /**
@@ -16,18 +17,26 @@ interface KernelContract
 
     /**
      * @param RequestContract $request
-     *
-     * @return ResponseContract
+     * @return ResponseContract|null
      */
-    public function handle(RequestContract $request): ResponseContract;
+    public function request(RequestContract $request);
 
     /**
-     * @param RequestContract  $request
+     * transport
+     *
+     * @param string $data
+     * @param RequestContract|null $request
+     * @return ResponseContract
+     */
+    public function transport(string $data, ?RequestContract $request = null): ResponseContract;
+
+    /**
+     * @param RequestContract|DataProviderContract $request
      * @param ResponseContract $response
      *
      * @return mixed
      */
-    public function terminate(RequestContract $request, ResponseContract $response);
+    public function terminate($data, ResponseContract $response);
 
     /**
      * @return ApplicationContract

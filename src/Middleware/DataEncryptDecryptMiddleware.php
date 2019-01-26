@@ -3,8 +3,8 @@
 namespace CrCms\Microservice\Server\Middleware;
 
 use Closure;
-use UnexpectedValueException;
-use CrCms\Microservice\Bridging\Packer;
+use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
+use CrCms\Microservice\Bridging\DataPacker;
 use CrCms\Microservice\Server\Contracts\RequestContract;
 use CrCms\Microservice\Server\Contracts\ResponseContract;
 
@@ -14,16 +14,14 @@ use CrCms\Microservice\Server\Contracts\ResponseContract;
 class DataEncryptDecryptMiddleware
 {
     /**
-     * @var Packer
+     * @var DataPacker
      */
     protected $packer;
 
     /**
-     * DataEncryptDecrypt constructor.
-     *
-     * @param Packer $packer
+     * @param DataPacker $packer
      */
-    public function __construct(Packer $packer)
+    public function __construct(DataPacker $packer)
     {
         $this->packer = $packer;
     }
@@ -34,16 +32,10 @@ class DataEncryptDecryptMiddleware
      *
      * @return mixed
      */
-    public function handle(RequestContract $request, Closure $next)
+    public function handle(DataProviderContract $data, Closure $next)
     {
-        /* 前置执行 */
-        $data = $this->packer->unpack($request->rawData());
-
-        $request->setCurrentCall($data['call']);
-        $request->setData($data['data'] ?? []);
-
         /* @var ResponseContract $response */
-        $response = $next($request);
+        $response = $next($data);
 
         /* 后置执行 */
         $responseData = $response->getData(true);
@@ -52,20 +44,5 @@ class DataEncryptDecryptMiddleware
         }
 
         return $response;
-    }
-
-    /**
-     * @param $content
-     *
-     * @return array
-     */
-    protected function parseContent($content): array
-    {
-        $data = json_decode($content, true);
-        if (json_last_error() !== 0) {
-            throw new UnexpectedValueException('Parse data error: '.json_last_error_msg());
-        }
-
-        return $data;
     }
 }
