@@ -2,41 +2,20 @@
 
 namespace CrCms\Microservice\Server\Contracts;
 
-use CrCms\Microservice\Routing\Route;
+use CrCms\Microservice\Dispatching\Matcher;
 
-/**
- * Interface RequestContract.
- */
 interface RequestContract
 {
     /**
-     * @return mixed
+     * @return Matcher
      */
-    //public static function createRequest(): RequestContract;
+    public function caller(): Matcher;
 
     /**
-     * @return string
-     */
-    public function currentCall(): string;
-
-    /**
-     * @param string $call
-     *
+     * @param Matcher $call
      * @return RequestContract
      */
-    public function setCurrentCall(string $call): self;
-
-    /**
-     * @param Route $route
-     *
-     * @return RequestContract
-     */
-    public function setRoute(Route $route): self;
-
-    /**
-     * @return Route
-     */
-    public function getRoute(): Route;
+    public function setCaller(Matcher $call): self;
 
     /**
      * @return mixed

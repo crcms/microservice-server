@@ -32,8 +32,13 @@ class DataEncryptDecryptMiddleware
      *
      * @return mixed
      */
-    public function handle(DataProviderContract $data, Closure $next)
+    public function handle(RequestContract $request, Closure $next)
     {
+        /* 前置执行 */
+        $data = $this->packer->unpack($request->rawData());
+        $request->setCurrentCall($data['call']);
+        $request->setData($data['data'] ?? []);
+
         /* @var ResponseContract $response */
         $response = $next($data);
 

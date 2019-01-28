@@ -22,14 +22,18 @@ interface ResponseContract
     public function send();
 
     /**
-     * @param $response
-     *
-     * @return ResponseContract
+     * @return string
      */
-    public static function createResponse($response): self;
+    public function getContent(): string;
 
     /**
-     * @return mixed
+     * @param array $data
+     * @return void
      */
-    public function getContent();
+    public function setData(array $data): void;
+
+    /**
+     * @return array
+     */
+    public function getData(): array;
 }

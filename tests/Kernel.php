@@ -13,6 +13,7 @@ use CrCms\Microservice\Server\Contracts\ResponseContract;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Illuminate\Contracts\Foundation\Application as ApplicationContract;
 use Illuminate\Contracts\Debug\ExceptionHandler as ExceptionHandlerContract;
+use CrCms\Microservice\Dispatching\Pipeline;
 use Exception;
 use Throwable;
 
@@ -50,18 +51,18 @@ class Kernel implements KernelContract
         $this->app = $app;
     }
 
-    public function request(RequestContract $request)
+    public function handle(RequestContract $request): ResponseContract
     {
         $this->app->instance('request', $request);
 
         Facade::clearResolvedInstance('request');
 
         try {
-            $response = (new \Illuminate\Pipeline\Pipeline($this->app))
+            $response = (new Pipeline($this->app))
                 ->send($request)
                 ->through($this->middleware)
-                ->then(function ($request) {
-                    return $request;
+                ->then(function(RequestContract $request){
+                    return $request->caller()->response();
                 });
         } catch (Exception $e) {
             $this->reportException($e);
@@ -69,29 +70,6 @@ class Kernel implements KernelContract
         } catch (Throwable $e) {
             $this->reportException($e = new FatalThrowableError($e));
             $response = $this->renderException($request, $e);
-        }
-
-        return $response;
-    }
-
-    public function transport(string $data, ?RequestContract $request = null): ResponseContract
-    {
-        try {
-            $data = $this->app->make('server.packer')->unpack($data);
-
-            $this->app->instance('data.provider', new DataProvider(
-                array_merge($data['data'],['_request' => $request])
-            ));
-
-            Facade::clearResolvedInstance('data.provider');
-
-            $response = $this->app->make('caller.match', $data['call'], $data);
-        } catch (Exception $e) {
-            $this->reportException($e);
-            $response = $this->renderException(null, $e);
-        } catch (Throwable $e) {
-            $this->reportException($e = new FatalThrowableError($e));
-            $response = $this->renderException(null, $e);
         }
 
         return $response;
@@ -106,40 +84,26 @@ class Kernel implements KernelContract
     }
 
     /**
-     * Get the route dispatcher callback.
-     *
-     * @return \Closure
-     */
-    protected function dispatchToRouter()
-    {
-        return function (RequestContract $request) {
-            $this->app->instance('request', $request);
-
-            return $this->router->dispatch($request);
-        };
-    }
-
-    /**
      * @param RequestContract|DataProviderContract $data
      * @param ResponseContract $response
      *
      * @return mixed|void
      */
-    public function terminate($data, ResponseContract $response)
+    public function terminate(RequestContract $request, ResponseContract $response)
     {
-        $this->terminateMiddleware($data, $response);
+        $this->terminateMiddleware($request, $response);
 
         $this->app->terminate();
     }
 
     /**
-     * @param RequestContract|DataProviderContract $request
+     * @param RequestContract $request
      * @param ResponseContract $response
      */
-    protected function terminateMiddleware($data, ResponseContract $response)
+    protected function terminateMiddleware(RequestContract $request, ResponseContract $response)
     {
         $middlewares = array_merge(
-            $this->app->make('caller.match')->getCallerMiddleware(),
+            $request->currentCall()->getCallerMiddleware(),
             $this->middleware
         );
 

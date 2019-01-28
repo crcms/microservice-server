@@ -17,26 +17,17 @@ interface KernelContract
 
     /**
      * @param RequestContract $request
-     * @return ResponseContract|null
-     */
-    public function request(RequestContract $request);
-
-    /**
-     * transport
-     *
-     * @param string $data
-     * @param RequestContract|null $request
      * @return ResponseContract
      */
-    public function transport(string $data, ?RequestContract $request = null): ResponseContract;
+    public function handle(RequestContract $request): ResponseContract;
 
     /**
-     * @param RequestContract|DataProviderContract $request
+     * @param RequestContract $request
      * @param ResponseContract $response
      *
      * @return mixed
      */
-    public function terminate($data, ResponseContract $response);
+    public function terminate(RequestContract $request, ResponseContract $response);
 
     /**
      * @return ApplicationContract
