@@ -25,17 +25,12 @@
   "type": "library",
   "require": {
     "php": "^7.2.4",
-    "crcms/foundation": "dev-master",
-    "crcms/microservice-bridging": "dev-master",
-    "crcms/microservice-dispatching": "dev-master",
     "crcms/swoole-server": "dev-master",
-    "symfony/debug": "^4.1",
     "illuminate/contracts": "5.7.*",
     "illuminate/support": "5.7.*",
     "illuminate/events": "5.7.*",
     "illuminate/validation": "5.7.*",
-    "illuminate/config": "5.7.*",
-    "illuminate/encryption": "5.7.*"
+    "illuminate/config": "5.7.*"
   },
   "require-dev": {
     "mockery/mockery": "^1.2",
