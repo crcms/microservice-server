@@ -14,6 +14,6 @@ class KernelTest extends TestCase
     {
         $kernel = new Kernel(static::$app);
 
-        $kernel->request(new Request(\Illuminate\Http\Request::capture()));
+        $kernel->handle(new Request(static::$app,\Illuminate\Http\Request::capture()));
     }
 }

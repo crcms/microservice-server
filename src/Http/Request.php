@@ -2,6 +2,7 @@
 
 namespace CrCms\Microservice\Server\Http;
 
+use CrCms\Microservice\Dispatching\Matcher;
 use CrCms\Microservice\Routing\Route;
 use Illuminate\Http\Request as BaseRequest;
 use Illuminate\Contracts\Container\Container;
@@ -33,9 +34,9 @@ class Request implements RequestContract
     protected $data = [];
 
     /**
-     * @var string
+     * @var Matcher
      */
-    protected $call;
+    protected $caller;
 
     /**
      * Request constructor.
@@ -50,11 +51,11 @@ class Request implements RequestContract
 
     /**
      * @return string
-     */
-    public function currentCall(): string
-    {
-        return $this->call;
-    }
+//     */
+//    public function currentCall(): string
+//    {
+//        return $this->call;
+//    }
 
     /**
      * @param string $call
@@ -68,24 +69,15 @@ class Request implements RequestContract
         return $this;
     }
 
-    /**
-     * @param Route $route
-     *
-     * @return RequestContract
-     */
-    public function setRoute(Route $route): RequestContract
+    public function caller(): Matcher
     {
-        $this->route = $route;
-
-        return $this;
+        return $this->caller;
     }
 
-    /**
-     * @return Route
-     */
-    public function getRoute(): Route
+    public function setCaller(Matcher $caller): RequestContract
     {
-        return $this->route;
+        $this->caller = $caller;
+        return $this;
     }
 
     /**

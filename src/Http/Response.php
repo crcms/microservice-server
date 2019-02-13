@@ -3,6 +3,7 @@
 namespace CrCms\Microservice\Server\Http;
 
 use ArrayObject;
+use CrCms\Foundation\Helpers\InstanceConcern;
 use JsonSerializable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,8 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
  */
 class Response extends JsonResponse implements ResponseContract
 {
+    use InstanceConcern;
+
     /**
      * @param $response
      *
@@ -44,6 +47,11 @@ class Response extends JsonResponse implements ResponseContract
         }
 
         return $response->forceHeaders();
+    }
+
+    public function getContent(): string
+    {
+        return $this->app->make('server.packer')->pack($this->getData(true));
     }
 
     /**

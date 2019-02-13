@@ -12,10 +12,10 @@ interface RequestContract
     public function caller(): Matcher;
 
     /**
-     * @param Matcher $call
+     * @param Matcher $caller
      * @return RequestContract
      */
-    public function setCaller(Matcher $call): self;
+    public function setCaller(Matcher $caller): self;
 
     /**
      * @return mixed

@@ -4,6 +4,8 @@ namespace CrCms\Microservice\Server\Tests;
 
 use CrCms\Foundation\Transporters\Contracts\DataProviderContract;
 use CrCms\Foundation\Transporters\DataProvider;
+use CrCms\Microservice\Dispatching\Matcher;
+use CrCms\Microservice\Server\Middleware\ParseCallerMiddleware;
 use Illuminate\Contracts\Container\Container;
 use CrCms\Microservice\Routing\Router;
 use Illuminate\Support\Facades\Facade;
@@ -35,7 +37,8 @@ class Kernel implements KernelContract
      * @var array
      */
     protected $middleware = [
-        \CrCms\Microservice\Server\Middleware\DataEncryptDecryptMiddleware::class,
+        //\CrCms\Microservice\Server\Middleware\DataEncryptDecryptMiddleware::class,
+        ParseCallerMiddleware::class,
     ];
 
     /**
@@ -46,23 +49,27 @@ class Kernel implements KernelContract
      *
      * @return void
      */
-    public function __construct(ApplicationContract $app)
+    public function __construct(Container $app)
     {
         $this->app = $app;
     }
 
     public function handle(RequestContract $request): ResponseContract
     {
-        $this->app->instance('request', $request);
+        $this->app->instance('request', $this->bindRequestCaller($request));
 
         Facade::clearResolvedInstance('request');
 
         try {
             $response = (new Pipeline($this->app))
                 ->send($request)
-                ->through($this->middleware)
+                ->through(array_merge($this->middleware,$request->caller()->getCallerMiddleware()))
                 ->then(function(RequestContract $request){
-                    return $request->caller()->response();
+                    return $this->app->call($request->caller()->getCallerUses());
+//                    if (!empty($data)) {
+//                        $this->app->make('server.packer')->pack($data);
+//                    }
+//                    return Response
                 });
         } catch (Exception $e) {
             $this->reportException($e);
@@ -75,6 +82,23 @@ class Kernel implements KernelContract
         return $response;
     }
 
+    protected function bindRequestCaller(RequestContract $request): RequestContract
+    {
+        $data = $this->app->make('server.packer')->unpack($request->rawData());
+
+        /* @var Matcher $matcher */
+        $matcher = $this->app->make('dispatcher')->getCaller($data['call']);
+
+        $request->setCaller($matcher->setContainer($this->app));
+        $request->setData($data['data'] ?? []);
+        return $request;
+    }
+
+
+    protected function bindResponse()
+    {
+
+    }
 
     public function bootstrap(): void
     {

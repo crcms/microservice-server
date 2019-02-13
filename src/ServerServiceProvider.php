@@ -13,6 +13,7 @@ namespace CrCms\Microservice\Server;
 
 use CrCms\Microservice\Bridging\DataPacker;
 use CrCms\Microservice\Bridging\Packer\JsonPacker;
+use CrCms\Microservice\Server\Contracts\RequestContract;
 use Illuminate\Support\Collection;
 use CrCms\Microservice\Routing\Route;
 use Illuminate\Support\ServiceProvider;
@@ -54,6 +55,8 @@ class ServerServiceProvider extends ServiceProvider
         $this->registerAlias();
 
         //$this->registerServices();
+
+//        $this->app->bind('response',Response::class);
     }
 
     /**
@@ -62,6 +65,11 @@ class ServerServiceProvider extends ServiceProvider
     protected function registerAlias(): void
     {
         $this->app->alias('server.packer', DataPacker::class);
+        $this->app->alias('request',RequestContract::class);
+//        $this->app->alias('response',ResponseContract::class);
+//        'request' => [\CrCms\Microservice\Server\Contracts\RequestContract::class],
+//                     'caller' => [\CrCms\Microservice\Dispatching\Dispatcher::class],
+//                     'caller.match' => [\CrCms\Microservice\Dispatching\Matcher::class],
     }
 
     /**
