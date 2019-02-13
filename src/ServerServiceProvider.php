@@ -14,6 +14,7 @@ namespace CrCms\Microservice\Server;
 use CrCms\Microservice\Bridging\DataPacker;
 use CrCms\Microservice\Bridging\Packer\JsonPacker;
 use CrCms\Microservice\Server\Contracts\RequestContract;
+use CrCms\Microservice\Server\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use CrCms\Microservice\Server\Events\RequestHandling;

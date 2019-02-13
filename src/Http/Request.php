@@ -19,11 +19,6 @@ class Request implements RequestContract
     protected $request;
 
     /**
-     * @var Route
-     */
-    protected $route;
-
-    /**
      * @var Container
      */
     protected $app;
@@ -77,12 +72,7 @@ class Request implements RequestContract
      */
     public function rawData()
     {
-        //running in swoole
-        if ($this->app->has('server')) {
-            return $this->app->make('server')->request->getSwooleRequest()->rawContent();
-        } else {
-            return file_get_contents('php://input');
-        }
+        return $this->app->make('server')->request->getSwooleRequest()->rawContent();
     }
 
     /**
@@ -91,14 +81,6 @@ class Request implements RequestContract
     public function all(): array
     {
         return $this->data ?? [];
-    }
-
-    /**
-     * @return string
-     */
-    public function method(): string
-    {
-        return $this->request->method();
     }
 
     /**

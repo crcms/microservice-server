@@ -9,7 +9,7 @@ use CrCms\Microservice\Server\Contracts\ResponseContract;
 /**
  * Class Response.
  */
-class Response extends JsonResponse implements ResponseContract
+class Response extends \Illuminate\Http\Response implements ResponseContract
 {
     use InstanceConcern;
 
@@ -19,6 +19,11 @@ class Response extends JsonResponse implements ResponseContract
     protected $packData;
 
     /**
+     * @var array
+     */
+    protected $data = [];
+
+    /**
      * setData
      *
      * @param array $data
@@ -26,9 +31,18 @@ class Response extends JsonResponse implements ResponseContract
      */
     public function setData(array $data): ResponseContract
     {
-        parent::setData($data);
-
+        $this->data = $data;
         return $this;
+    }
+
+    /**
+     * getData
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
     }
 
     /**
