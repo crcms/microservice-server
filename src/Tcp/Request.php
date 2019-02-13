@@ -2,26 +2,14 @@
 
 namespace CrCms\Microservice\Server\Tcp;
 
+use CrCms\Microservice\Dispatching\Matcher;
 use CrCms\Microservice\Routing\Route;
 use Illuminate\Http\Request as BaseRequest;
 use Illuminate\Contracts\Container\Container;
 use CrCms\Microservice\Server\Contracts\RequestContract;
 
-/**
- * Class Request.
- */
 class Request implements RequestContract
 {
-    /**
-     * @var BaseRequest
-     */
-    protected $request;
-
-    /**
-     * @var Route
-     */
-    protected $route;
-
     /**
      * @var Container
      */
@@ -38,6 +26,11 @@ class Request implements RequestContract
     protected $rawData;
 
     /**
+     * @var Matcher
+     */
+    protected $matcher;
+
+    /**
      * Request constructor.
      *
      * @param BaseRequest $request
@@ -49,31 +42,26 @@ class Request implements RequestContract
     }
 
     /**
-     * @return string
+     * matcher
+     *
+     * @return Matcher
      */
-    public function currentCall(): string
+    public function matcher(): Matcher
     {
-        return $this->request->input('call');
+        return $this->matcher;
     }
 
     /**
-     * @param Route $route
+     * setMatcher
      *
+     * @param Matcher $matcher
      * @return RequestContract
      */
-    public function setRoute(Route $route): RequestContract
+    public function setMatcher(Matcher $matcher): RequestContract
     {
-        $this->route = $route;
+        $this->matcher = $matcher;
 
         return $this;
-    }
-
-    /**
-     * @return Route
-     */
-    public function getRoute(): Route
-    {
-        return $this->route;
     }
 
     /**
@@ -91,14 +79,6 @@ class Request implements RequestContract
     public function all(): array
     {
         return $this->data ?? [];
-    }
-
-    /**
-     * @return string
-     */
-    public function method(): string
-    {
-        return $this->request->method();
     }
 
     /**

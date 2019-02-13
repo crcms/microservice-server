@@ -36,7 +36,7 @@ class Request implements RequestContract
     /**
      * @var Matcher
      */
-    protected $caller;
+    protected $matcher;
 
     /**
      * Request constructor.
@@ -50,33 +50,25 @@ class Request implements RequestContract
     }
 
     /**
-     * @return string
-//     */
-//    public function currentCall(): string
-//    {
-//        return $this->call;
-//    }
+     * matcher
+     *
+     * @return Matcher
+     */
+    public function matcher(): Matcher
+    {
+        return $this->matcher;
+    }
 
     /**
-     * @param string $call
+     * setMatcher
      *
+     * @param Matcher $matcher
      * @return RequestContract
      */
-    public function setCurrentCall(string $call): RequestContract
+    public function setMatcher(Matcher $matcher): RequestContract
     {
-        $this->call = $call;
+        $this->matcher = $matcher;
 
-        return $this;
-    }
-
-    public function caller(): Matcher
-    {
-        return $this->caller;
-    }
-
-    public function setCaller(Matcher $caller): RequestContract
-    {
-        $this->caller = $caller;
         return $this;
     }
 
