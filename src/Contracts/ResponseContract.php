@@ -27,10 +27,20 @@ interface ResponseContract
     public function getContent(): string;
 
     /**
-     * @param array $data
-     * @return void
+     * setPackData
+     *
+     * @param string $data
+     * @return ResponseContract
      */
-    public function setData(array $data): void;
+    public function setPackData(string $data): ResponseContract;
+
+    /**
+     * setData
+     *
+     * @param array $data
+     * @return ResponseContract
+     */
+    public function setData(array $data): ResponseContract;
 
     /**
      * @return array

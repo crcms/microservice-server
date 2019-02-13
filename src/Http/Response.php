@@ -2,16 +2,9 @@
 
 namespace CrCms\Microservice\Server\Http;
 
-use ArrayObject;
-use CrCms\Foundation\Helpers\InstanceConcern;
-use JsonSerializable;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Support\Jsonable;
-//use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
-use Illuminate\Contracts\Support\Arrayable;
+use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Microservice\Server\Contracts\ResponseContract;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 /**
  * Class Response.
@@ -21,58 +14,42 @@ class Response extends JsonResponse implements ResponseContract
     use InstanceConcern;
 
     /**
-     * @param $response
+     * @var string
+     */
+    protected $packData;
+
+    /**
+     * setData
      *
+     * @param array $data
      * @return ResponseContract
      */
-    public static function createResponse($response): ResponseContract
+    public function setData(array $data): ResponseContract
     {
-        if ($response instanceof Model && $response->wasRecentlyCreated) {
-            $response = new static($response, 201);
-        } elseif ($response instanceof JsonResponse) {
-            $response = new static($response->getData(), $response->getStatusCode(), $response->headers->all(), $response->getEncodingOptions());
-        } elseif (! $response instanceof SymfonyResponse &&
-            ($response instanceof Arrayable ||
-                $response instanceof Jsonable ||
-                $response instanceof ArrayObject ||
-                $response instanceof JsonSerializable ||
-                is_array($response))) {
-            $response = new static($response);
-        } else {
-            $response = new static($response);
-        }
+        parent::setData($data);
 
-        if ($response->getStatusCode() === self::HTTP_NOT_MODIFIED) {
-            $response->setNotModified();
-        }
-
-        return $response->forceHeaders();
-    }
-
-    public function getContent(): string
-    {
-        return $this->app->make('server.packer')->pack($this->getData(true));
+        return $this;
     }
 
     /**
-     * @return Response
+     * setPackData
+     *
+     * @param string $data
+     * @return ResponseContract
      */
-    public function forceHeaders(): self
+    public function setPackData(string $data): ResponseContract
     {
-        $headers = $this->headers;
-
-        if ($this->isInformational() || $this->isEmpty()) {
-            $this->setContent(null);
-            $headers->remove('Content-Type');
-            $headers->remove('Content-Length');
-        } else {
-            $headers->set('Content-Type', 'application/json; charset=UTF-8');
-        }
-        //$headers->set('Connection','keep-alive');
-
-        // Fix protocol
-        $this->setProtocolVersion('1.1');
-
+        $this->packData = $data;
         return $this;
+    }
+
+    /**
+     * getContent
+     *
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->packData;
     }
 }
