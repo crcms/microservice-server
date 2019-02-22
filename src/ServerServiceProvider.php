@@ -37,7 +37,7 @@ class ServerServiceProvider extends ServiceProvider
     {
         $this->registerAlias();
 
-        $this->app->bind('response',Response::class);
+        $this->app->bind('response', Response::class);
     }
 
     /**
@@ -45,8 +45,8 @@ class ServerServiceProvider extends ServiceProvider
      */
     protected function registerAlias(): void
     {
-        $this->app->alias('request',RequestContract::class);
-        $this->app->alias('response',ResponseContract::class);
+        $this->app->alias('request', RequestContract::class);
+        $this->app->alias('response', ResponseContract::class);
     }
 
     /**
