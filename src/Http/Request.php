@@ -3,7 +3,6 @@
 namespace CrCms\Microservice\Server\Http;
 
 use CrCms\Microservice\Dispatching\Matcher;
-use CrCms\Microservice\Routing\Route;
 use Illuminate\Http\Request as BaseRequest;
 use Illuminate\Contracts\Container\Container;
 use CrCms\Microservice\Server\Contracts\RequestContract;
@@ -72,7 +71,7 @@ class Request implements RequestContract
      */
     public function rawData()
     {
-        return $this->app->make('server')->request->getSwooleRequest()->rawContent();
+        return $this->request->getContent();
     }
 
     /**

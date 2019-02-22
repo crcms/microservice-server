@@ -2,50 +2,47 @@
 
 namespace CrCms\Microservice\Server\Http\Events;
 
-use Swoole\Http\Request;
 use CrCms\Microservice\Server\Contracts\KernelContract as Kernel;
 use CrCms\Server\Server\AbstractServer;
-use CrCms\Server\Http\Request as ServerRequest;
-use CrCms\Server\Server\Contracts\EventContract;
-use CrCms\Server\Http\Response as ServerResponse;
-use CrCms\Server\Http\Events\RequestEvent as BaseRequestEvent;
+use CrCms\Server\Drivers\Laravel\Http\Request as ServerRequest;
+use CrCms\Server\Drivers\Laravel\Http\Response as ServerResponse;
+use CrCms\Server\Drivers\Laravel\Http\Events\Server\RequestEvent as BaseRequestEvent;
 use CrCms\Microservice\Server\Http\Request as MicroserviceRequest;
 
 /**
  * Class RequestEvent.
  */
-class RequestEvent extends BaseRequestEvent implements EventContract
+class RequestEvent extends BaseRequestEvent
 {
     /**
      * @param AbstractServer $server
      *
      * @return void
      */
-    public function handle(AbstractServer $server): void
+    public function handle(): void
     {
-        $this->server = $server;
+        try {
+            $this->server->getLaravel()->open();
 
-        $app = $server->getApplication();
+            $app = $this->server->getApplication();
 
-        $kernel = $app->make(Kernel::class);
+            $kernel = $app->make(Kernel::class);
 
-        $microserviceRequest = new MicroserviceRequest(
-            $app,
-            ServerRequest::make($this->swooleRequest)->getIlluminateRequest()
-        );
+            $microserviceRequest = new MicroserviceRequest(
+                $app,
+                ServerRequest::make($this->swooleRequest)->getIlluminateRequest()
+            );
 
-        $microserviceResponse = $kernel->handle($microserviceRequest);
+            $microserviceResponse = $kernel->handle($microserviceRequest);
 
-        ServerResponse::make($this->swooleResponse, $microserviceResponse)->toResponse();
+            ServerResponse::make($this->swooleResponse, $microserviceResponse)->toResponse();
 
-        $kernel->terminate($microserviceRequest, $microserviceResponse);
-    }
-
-    /**
-     * @return Request
-     */
-    public function getSwooleRequest(): Request
-    {
-        return $this->swooleRequest;
+            $kernel->terminate($microserviceRequest, $microserviceResponse);
+        } catch (\Throwable $e) {
+            throw $e;
+        } finally {
+            // reset application
+            $this->server->getLaravel()->close();
+        }
     }
 }

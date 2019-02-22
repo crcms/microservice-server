@@ -2,17 +2,10 @@
 
 namespace CrCms\Microservice\Server\Http;
 
-use Illuminate\Http\JsonResponse;
-use CrCms\Foundation\Helpers\InstanceConcern;
 use CrCms\Microservice\Server\Contracts\ResponseContract;
 
-/**
- * Class Response.
- */
 class Response extends \Illuminate\Http\Response implements ResponseContract
 {
-    use InstanceConcern;
-
     /**
      * @var string
      */

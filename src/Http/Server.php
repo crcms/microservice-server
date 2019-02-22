@@ -2,69 +2,30 @@
 
 /**
  * @author simon <crcms@crcms.cn>
- * @datetime 2018/6/16 17:41
+ * @datetime 2019-02-22 22:46
  *
  * @link http://crcms.cn/
  *
- * @copyright Copyright &copy; 2018 Rights Reserved CRCMS
+ * @copyright Copyright &copy; 2019 Rights Reserved CRCMS
  */
 
 namespace CrCms\Microservice\Server\Http;
 
-use CrCms\Microservice\Server\Contracts\KernelContract as Kernel;
-use Swoole\Http\Server as HttpServer;
-use CrCms\Server\Server\AbstractServer;
-use CrCms\Server\Server\Contracts\ServerContract;
 use CrCms\Microservice\Server\Http\Events\RequestEvent;
+use CrCms\Server\Drivers\Laravel\Http\Server as HttpServer;
 
-/**
- * Class Server.
- */
-class Server extends AbstractServer implements ServerContract
+class Server extends HttpServer
 {
     /**
-     * @var array
-     */
-    protected $events = [
-        'request' => RequestEvent::class,
-    ];
-
-    /**
-     * @return void
-     */
-    public function bootstrap(): void
-    {
-        $this->app->make(Kernel::class)->bootstrap();
-        $this->app->instance('server', $this);
-    }
-
-    /**
-     * @param array $config
+     * set server events
      *
-     * @return void
+     * @return array
      */
-    public function createServer(): void
+    protected function events(): array
     {
-        $serverParams = [
-            $this->config['host'],
-            $this->config['port'],
-            $this->config['mode'] ?? SWOOLE_PROCESS,
-            $this->config['type'] ?? SWOOLE_SOCK_TCP,
-        ];
+        $events = parent::events();
+        $events['request'] = RequestEvent::class;
 
-        $this->server = new HttpServer(...$serverParams);
-        $this->setPidFile();
-        $this->setSettings($this->config['settings'] ?? []);
-        $this->eventDispatcher($this->config['events'] ?? []);
-    }
-
-    /**
-     * @return void
-     */
-    protected function setPidFile()
-    {
-        if (empty($this->config['settings']['pid_file'])) {
-            $this->config['settings']['pid_file'] = $this->pidFile();
-        }
+        return $events;
     }
 }

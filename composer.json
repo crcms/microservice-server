@@ -24,9 +24,10 @@
   "license": "MIT",
   "type": "library",
   "require": {
-    "php": "^7.2.4",
-    "crcms/swoole-server": "dev-master",
+    "php": "^7.2",
+    "crcms/swoole-server": "v1.x-dev",
     "illuminate/contracts": "5.7.*",
+    "illuminate/http": "5.7.*",
     "illuminate/support": "5.7.*",
     "illuminate/events": "5.7.*",
     "illuminate/validation": "5.7.*",
@@ -34,7 +35,10 @@
   },
   "require-dev": {
     "mockery/mockery": "^1.2",
-    "phpunit/phpunit": "^7.4",
+    "codedungeon/phpunit-result-printer": "^0.26.0",
+    "php-coveralls/php-coveralls": "^2.1",
+    "phpunit/php-code-coverage": "^6.0",
+    "phpunit/phpunit": "^7.5",
     "symfony/var-dumper": "^4.1"
   },
   "autoload": {
