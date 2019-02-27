@@ -26,12 +26,12 @@
   "require": {
     "php": "^7.2",
     "crcms/swoole-server": "v1.x-dev",
-    "illuminate/contracts": "5.7.*",
-    "illuminate/http": "5.7.*",
-    "illuminate/support": "5.7.*",
-    "illuminate/events": "5.7.*",
-    "illuminate/validation": "5.7.*",
-    "illuminate/config": "5.7.*"
+    "illuminate/contracts": "5.7.* | 5.8.*",
+    "illuminate/http": "5.7.* | 5.8.*",
+    "illuminate/support": "5.7.* | 5.8.*",
+    "illuminate/events": "5.7.* | 5.8.*",
+    "illuminate/validation": "5.7.* | 5.8.*",
+    "illuminate/config": "5.7.* | 5.8.*"
   },
   "require-dev": {
     "mockery/mockery": "^1.2",
