@@ -28,4 +28,14 @@ class Server extends HttpServer
 
         return $events;
     }
+
+    /**
+     * Set server name
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return 'ms';
+    }
 }
