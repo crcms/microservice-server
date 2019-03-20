@@ -29,6 +29,29 @@ class Response extends \Illuminate\Http\Response implements ResponseContract
     }
 
     /**
+     * setStatusCode
+     *
+     * @param int $code
+     * @param null $text
+     * @return ResponseContract
+     */
+    public function setStatusCode(int $code, $text = null): ResponseContract
+    {
+        parent::setStatusCode($code,$text);
+        return $this;
+    }
+
+    /**
+     * getStatusCode
+     *
+     * @return int
+     */
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    /**
      * getData
      *
      * @return array

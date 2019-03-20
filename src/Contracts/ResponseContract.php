@@ -27,6 +27,20 @@ interface ResponseContract
     public function getContent(): string;
 
     /**
+     * setStatusCode
+     *
+     * @return ResponseContract
+     */
+    public function setStatusCode(int $code): ResponseContract;
+
+    /**
+     * getStatusCode
+     *
+     * @return int
+     */
+    public function getStatusCode(): int;
+
+    /**
      * setPackData
      *
      * @param string $data
