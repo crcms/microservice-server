@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="CrCms\Microservice\Server\Tests\KernelTest" file="/var/www/packages/microservice-server/tests/KernelTest.php" tests="1" assertions="0" errors="1" failures="0" skipped="0" time="0.022431">
+    <testcase name="testKernel" class="CrCms\Microservice\Server\Tests\KernelTest" classname="CrCms.Microservice.Server.Tests.KernelTest" file="/var/www/packages/microservice-server/tests/KernelTest.php" line="13" assertions="0" time="0.022431">
+      <error type="ReflectionException">CrCms\Microservice\Server\Tests\KernelTest::testKernel
+ReflectionException: Class server.packer does not exist
+
+/var/www/packages/microservice-server/vendor/illuminate/container/Container.php:779
+/var/www/packages/microservice-server/vendor/illuminate/container/Container.php:658
+/var/www/packages/microservice-server/vendor/illuminate/container/Container.php:609
+/var/www/packages/microservice-server/tests/Kernel.php:87
+/var/www/packages/microservice-server/tests/Kernel.php:59
+/var/www/packages/microservice-server/tests/KernelTest.php:17
+</error>
+    </testcase>
+  </testsuite>
+</testsuites>

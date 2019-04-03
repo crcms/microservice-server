@@ -80,6 +80,6 @@ class Response extends \Illuminate\Http\Response implements ResponseContract
      */
     public function getContent(): string
     {
-        return $this->packData;
+        return (string)$this->packData;
     }
 }
